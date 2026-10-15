@@ -43,9 +43,13 @@ For a thread, the URL of the first post is best.
 
 1. **Parse the URL.** `lib.url_parser.parse_threads_url(url)` returns `handle`,
    `post_id`, `url_type`.
-2. **Get the text.** This bundle has no built-in post reader, so ask the user to
-   paste the post or the full thread text. (If they later wire an Apify
-   post-read actor, read it automatically.)
+2. **Get the text.** There is no post-by-URL read on Threads, on either path, so
+   a specific post the user names has to be pasted. What can be read is the
+   neighbourhood: a niche search returns posts with their text and engagement,
+   via `lib.ApifyClient().fetch_niche_posts(query)` with a token, or the Apify
+   MCP connector's `igview-owner--threads-search-scraper` on claude.ai, with the
+   mapping in `../../references/mcp-read-layer.md`. Use that when the user asks
+   what is working rather than about one post, and say which you did.
 3. **Detect the container.** One self-contained post, or a multi-post thread.
 4. **Classify against the 13 formulas** using features:
    - Single post: a warm contrarian claim (T1)? one hard number (T2)? a personal

@@ -20,7 +20,7 @@ Not for writing a post or a thread (use `threads-post-writer`) or reverse-engine
 
 ## Setup (optional)
 
-The read layer uses **Apify** (no login, no cookies). Get a free token at `https://console.apify.com/settings/integrations` and set `APIFY_TOKEN` in `.env`. No token? Paste the posts you already have and the skill runs the same analysis on them.
+The read layer uses **Apify** (no login, no cookies). Get a free token at `https://console.apify.com/settings/integrations` and set `APIFY_TOKEN` in `.env`. No token? Paste the posts you already have and the skill runs the same analysis on them. **On claude.ai**, where a skill cannot hold a token, add Apify's MCP server as a custom connector instead and call `igview-owner--threads-search-scraper` / `apify--threads-profile-api-scraper`, applying the mapping in `../../references/mcp-read-layer.md`. With neither, the skill asks you to paste what you can see.
 
 ## Input
 
@@ -36,7 +36,7 @@ The read layer uses **Apify** (no login, no cookies). Get a free token at `https
 
 ## Steps
 
-1. **Pull the data.** For a niche: `lib.ApifyClient().fetch_niche_posts(query, max_items=30, sort="top")`. For a profile: `fetch_profile(username)`. Falls back to pasted data if no token.
+1. **Pull the data.** For a niche: `lib.ApifyClient().fetch_niche_posts(query, max_items=30, sort="top")` (`sort` is `"top"` or `"recent"`, lowercase; anything else is now refused rather than sent). For a profile: `fetch_profile(username)`. Falls back to pasted data if no token.
 2. **Rank by engagement.** Sort by a blend of replies + likes + reposts + quotes. Weight **replies highest** (heaviest Threads ranking signal). Normalize against the author's follower count when you have it, so a small account's breakout is not buried under a big account's baseline.
 3. **Extract the pattern.** For the top posts, name what they share: the hook shape (one-liner, confession, list, question), the length, single vs thread, whether it opens a reply loop. That is the repeatable part.
 4. **Read the profile.** From `fetch_profile`, report follower count, bio, verified status, and which of its recent posts pulled the most engagement. Note the format mix.

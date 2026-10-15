@@ -213,6 +213,25 @@ A visual lifts a Threads post. The Post Writer can generate an illustration or a
 
 Setup: drop `PIXFARO_TOKEN=pf_live_...` into your `.env`. The thin client at `lib/pixfaro_client.py` and the wrappers `lib.illustrate(prompt, kind="square")` / `lib.refine(image_id, instruction)` return a hosted URL that flows straight into `lib.publish(..., media_urls=[url])`. `refine` edits a prior image by its id (cheaper than regenerating); results carry `cost`, `balance_after`, and a `premium` flag so the skills never quietly spend on a pricey model.
 
+## Optional: read real Threads data with Apify
+
+`threads-audience-insights` scans a query or hashtag for the posts travelling now (text, likes, replies, reposts, quotes) and pulls a profile's follower count, bio and latest posts. Without a read credential it asks you to paste what you can see, so nothing breaks.
+
+**With a shell**, drop a free token into your `.env`:
+
+```
+APIFY_TOKEN=apify_api_...
+```
+
+**On claude.ai**, where a skill has no environment to hold a token, add Apify's MCP server as a custom connector instead:
+
+```
+https://mcp.apify.com?actors=igview-owner/threads-search-scraper,apify/threads-profile-api-scraper
+```
+
+Sign in with OAuth on first use, no key on disk. **Keep the `?actors=` filter**: the bare `https://mcp.apify.com` also hands the agent `search-actors` and `call-actor`, which run anything in the Apify Store at whatever that actor charges.
+
+Two things to know either way: the search actor bills a floor of 20 posts per run, so asking for 5 still costs 20, and Threads walls the liker list entirely, so this is discovery plus profile stats and never an engager roster. Details and the field mapping: [`references/mcp-read-layer.md`](references/mcp-read-layer.md).
 ## Voice rules
 
 Every skill follows these rules automatically:

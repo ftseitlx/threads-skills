@@ -50,8 +50,11 @@ account; add value or skip it. Keep the tone warm, this is Threads.
 1. **Parse the URL.** `lib.url_parser.parse_threads_url(url)` returns `handle`,
    `post_id`, `canonical_url`.
 2. **Read the context.** Ask the user to paste the target post and the relevant
-   conversation above it. If the user is already in the thread, include their
-   prior post.
+   conversation above it: Threads exposes no post-by-URL read, with a token or
+   through the Apify MCP connector, so there is nothing to fetch for one post.
+   If the author's recent activity matters, `fetch_profile(username)` returns
+   their latest posts on either path (`../../references/mcp-read-layer.md`). If
+   the user is already in the thread, include their prior post.
 3. **Decide reply vs quote post** using the table above. Recommend one, but let
    the user override.
 4. **Draft 1-3 variants** using `references/reply-templates.md`. If the

@@ -176,6 +176,8 @@ class ApifyClient:
         return data
 
     # ---- public read methods ----
+    SORTS = ("top", "recent")
+
     def fetch_niche_posts(self, query: str, max_items: int = 30, sort: str = "top",
                           force_refresh: bool = False) -> list[dict]:
         """Top/recent Threads posts for a niche query or hashtag.
@@ -184,6 +186,8 @@ class ApifyClient:
         (pass it with or without the leading #). The search actor enforces a
         floor of 20 posts per run, so smaller max_items is bumped up.
         """
+        if sort not in self.SORTS:
+            raise ValueError(f"sort must be one of {self.SORTS}, got {sort!r}")
         q = query.strip()
         want = max(int(max_items), SEARCH_MIN_POSTS)
         ck = f"search:{q}:{want}:{sort}"
